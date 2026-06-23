@@ -112,6 +112,14 @@ export interface ParticleData extends BaseAssetData {
     name: string;
     emitterConfig: any;
 }
+export interface AnimatedSpriteData extends BaseAssetData {
+    framePaths: string[];
+    fps: number;
+    x: number;
+    y: number;
+    playOnStart?: boolean;
+    looping?: boolean;
+}
 export interface SpriteData extends BaseAssetData {
     name: string;
     type: SpriteType;

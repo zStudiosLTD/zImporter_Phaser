@@ -260,7 +260,16 @@ export class ZContainer extends Phaser.GameObjects.Container {
         //at this moment the sybling that is masking may not be created yet. so wait. yes it's a hack for now...
         if (data.mask) {
             this.addMask(data.mask,0);
+        }
 
+        if (data.playOnStart) {
+            for (const child of this.list) {
+                if (child instanceof Phaser.GameObjects.Sprite && (child as any)._animKey) {
+                    const animKey = (child as any)._animKey;
+                    const looping = data.looping ?? false;
+                    (child as Phaser.GameObjects.Sprite).play({ key: animKey, repeat: looping ? -1 : 0 });
+                }
+            }
         }
     }
 

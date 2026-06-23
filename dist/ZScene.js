@@ -618,6 +618,48 @@ export class ZScene {
                 mc[spriteNode.name] = asset;
                 this.applyFilters(childNode, asset);
             }
+            // Animated Sprite
+            if (type === "animatedSprite") {
+                const animData = childNode;
+                const _name = childNode.name;
+                // Build per-frame Phaser animation frame descriptors
+                const frameConfigs = animData.framePaths.map(fp => {
+                    if (this.usesAtlas) {
+                        return { key: this.sceneName, frame: fp };
+                    }
+                    return { key: this.assetBasePath + fp };
+                });
+                // Create a unique animation key for this sprite instance
+                const animKey = `zscene_${this.sceneId}_${_name}`;
+                if (!this.phaserScene.anims.exists(animKey)) {
+                    this.phaserScene.anims.create({
+                        key: animKey,
+                        frames: frameConfigs,
+                        frameRate: animData.fps || 24,
+                        repeat: (animData.looping ?? false) ? -1 : 0
+                    });
+                }
+                // Create sprite from first frame
+                const firstFp = animData.framePaths[0];
+                const firstKey = this.usesAtlas ? this.sceneName : (this.assetBasePath + firstFp);
+                const firstFrame = this.usesAtlas ? firstFp : undefined;
+                const sprite = firstFrame
+                    ? this.phaserScene.add.sprite(animData.x || 0, animData.y || 0, firstKey, firstFrame)
+                    : this.phaserScene.add.sprite(animData.x || 0, animData.y || 0, firstKey);
+                // Match PIXI.AnimatedSprite default anchor (0,0) — top-left origin
+                sprite.setOrigin(0, 0);
+                sprite.setName(_name);
+                sprite.currentTransform = { x: animData.x || 0, y: animData.y || 0 };
+                sprite._animKey = animKey;
+                sprite._animLooping = animData.looping ?? false;
+                mc[_name] = sprite;
+                mc.add(sprite);
+                this.applyFilters(childNode, sprite);
+                if (animData.playOnStart) {
+                    sprite.play({ key: animKey, repeat: (animData.looping ?? false) ? -1 : 0 });
+                }
+                continue;
+            }
             // 9-Slice
             if (type === "9slice") {
                 const nineSliceData = childNode;
@@ -828,6 +870,16 @@ export class ZScene {
                         texName = texName.endsWith('_IMG') ? texName.slice(0, -4) : texName;
                         // SceneData SpriteData uses filePath for non-atlas images
                         images.push({ alias: texName, src: assetBasePath + sprite.filePath });
+                    }
+                }
+                if (child.type === 'animatedSprite') {
+                    const animData = child;
+                    for (const framePath of animData.framePaths) {
+                        if (!record[framePath]) {
+                            record[framePath] = true;
+                            const fullAlias = assetBasePath + framePath;
+                            images.push({ alias: fullAlias, src: fullAlias + `?t=${Date.now()}` });
+                        }
                     }
                 }
             }

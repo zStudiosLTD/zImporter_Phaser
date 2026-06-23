@@ -223,6 +223,15 @@ export class ZContainer extends Phaser.GameObjects.Container {
         if (data.mask) {
             this.addMask(data.mask, 0);
         }
+        if (data.playOnStart) {
+            for (const child of this.list) {
+                if (child instanceof Phaser.GameObjects.Sprite && child._animKey) {
+                    const animKey = child._animKey;
+                    const looping = data.looping ?? false;
+                    child.play({ key: animKey, repeat: looping ? -1 : 0 });
+                }
+            }
+        }
     }
     addMask(mskName, retry) {
         if (retry >= 3)

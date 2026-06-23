@@ -1,6 +1,6 @@
 {
   "name": "zimporter-phaser",
-  "version": "1.0.70",
+  "version": "1.0.71",
   "description": "A TypeScript library for importing and managing zStudio scenes in Phaser applications.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
