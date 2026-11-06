@@ -246,6 +246,9 @@ export class ZScene {
   public resize(width: number, height: number) {
     if (!this.data?.resolution) return;
 
+    ZContainer.screenWidth = width;
+    ZContainer.screenHeight = height;
+
     this.setOrientation();
     let baseWidth = this.data.resolution.x;
     let baseHeight = this.data.resolution.y;

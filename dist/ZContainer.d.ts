@@ -15,6 +15,9 @@ export declare class ZContainer extends Phaser.GameObjects.Container {
     currentTransform: OrientationData;
     resizeable: boolean;
     name: string;
+    /** Screen size from the latest ZScene.resize; scene.scale only catches up after the window's resize event. */
+    static screenWidth: number | undefined;
+    static screenHeight: number | undefined;
     _fitToScreen: boolean;
     emitter?: Phaser.GameObjects.Particles.ParticleEmitter;
     particleSystems: Phaser.GameObjects.Particles.ParticleEmitter[];

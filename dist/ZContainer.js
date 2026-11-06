@@ -5,6 +5,9 @@ export class ZContainer extends Phaser.GameObjects.Container {
     currentTransform;
     resizeable = true;
     name = "";
+    /** Screen size from the latest ZScene.resize; scene.scale only catches up after the window's resize event. */
+    static screenWidth;
+    static screenHeight;
     _fitToScreen = false;
     emitter;
     particleSystems = [];
@@ -407,8 +410,8 @@ export class ZContainer extends Phaser.GameObjects.Container {
     executeFitToScreen() {
         if (this.list.length === 0)
             return;
-        const screenWidth = this.scene.scale.width;
-        const screenHeight = this.scene.scale.height;
+        const screenWidth = ZContainer.screenWidth ?? this.scene.scale.width;
+        const screenHeight = ZContainer.screenHeight ?? this.scene.scale.height;
         // Helper: convert a world-space point to parent-local coords
         const parentMat = this.parentContainer
             ? this.parentContainer.getWorldTransformMatrix()
@@ -535,8 +538,8 @@ export class ZContainer extends Phaser.GameObjects.Container {
         if (this.currentTransform && this.currentTransform.isAnchored && this.parentContainer) {
             let xPer = this.currentTransform.anchorPercentage?.x ?? 0;
             let yPer = this.currentTransform.anchorPercentage?.y ?? 0;
-            let x = xPer * this.scene.scale.width;
-            let y = yPer * this.scene.scale.height;
+            let x = xPer * (ZContainer.screenWidth ?? this.scene.scale.width);
+            let y = yPer * (ZContainer.screenHeight ?? this.scene.scale.height);
             // x, y are already in world/screen space — convert directly to parent-local space
             const mat = this.parentContainer.getWorldTransformMatrix();
             const inv = new Phaser.GameObjects.Components.TransformMatrix();
