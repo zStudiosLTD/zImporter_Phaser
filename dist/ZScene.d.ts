@@ -45,7 +45,7 @@ export declare class ZScene {
      */
     applyFilters(obj: any, tf: Phaser.GameObjects.GameObject): void;
     get sceneStage(): ZContainer;
-    setOrientation(): void;
+    setOrientation(width?: number, height?: number): void;
     static getSceneById(sceneId: string): ZScene | undefined;
     loadStage(phaserScene?: Phaser.Scene, loadChildren?: boolean): void;
     /**

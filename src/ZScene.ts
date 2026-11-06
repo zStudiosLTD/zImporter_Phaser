@@ -154,13 +154,17 @@ export class ZScene {
     return this._sceneStage;
   }
 
-  public setOrientation(): void {
-    // Use the Phaser scene's scale dimensions (actual game canvas) if available,
-    // falling back to window dimensions. Also consider the design resolution as a
-    // tiebreaker when width === height.
+  public setOrientation(width?: number, height?: number): void {
+    // Prefer an explicit size: the scale manager updates after the window resize
+    // event, so its dimensions can be stale. Otherwise use the Phaser scene's scale
+    // dimensions (actual game canvas) if available, falling back to window dimensions.
+    // Also consider the design resolution as a tiebreaker when width === height.
     let w: number;
     let h: number;
-    if (this.phaserScene?.scale) {
+    if (width !== undefined && height !== undefined) {
+      w = width;
+      h = height;
+    } else if (this.phaserScene?.scale) {
       w = this.phaserScene.scale.width;
       h = this.phaserScene.scale.height;
     } else {
@@ -249,7 +253,7 @@ export class ZScene {
     ZContainer.screenWidth = width;
     ZContainer.screenHeight = height;
 
-    this.setOrientation();
+    this.setOrientation(width, height);
     let baseWidth = this.data.resolution.x;
     let baseHeight = this.data.resolution.y;
     if (this.orientation === "portrait") {

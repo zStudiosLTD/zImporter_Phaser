@@ -13,6 +13,13 @@ export interface AnchorData {
     };
 }
 
+/** Copies stored transforms so instances of the same template never share them. */
+const cloneOrientation = (data: OrientationData): OrientationData => data && ({
+    ...data,
+    ...(data.anchorPercentage ? { anchorPercentage: { ...data.anchorPercentage } } : {}),
+});
+
+
 export class ZContainer extends Phaser.GameObjects.Container {
     portrait: OrientationData;
     landscape: OrientationData;
@@ -237,8 +244,8 @@ export class ZContainer extends Phaser.GameObjects.Container {
     }
 
     public setInstanceData(data: InstanceData, orientation: string): void {
-        this.portrait = data.portrait;
-        this.landscape = data.landscape;
+        this.portrait = cloneOrientation(data.portrait);
+        this.landscape = cloneOrientation(data.landscape);
         this.currentTransform = orientation === "portrait" ? this.portrait : this.landscape;
         this.applyTransform();
         this.name = data.instanceName || "";

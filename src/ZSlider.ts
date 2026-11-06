@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import { updateHitArea, ZButton } from "./ZButton";
 import { ZContainer } from "./ZContainer";
 
 
@@ -37,6 +38,10 @@ export class ZSlider extends ZContainer {
 
         // ZButton manages its own hit area via _hitAreaGraphics which forwards events;
         // calling setInteractive() on a zero-sized Container does nothing useful.
+        // A plain container handle needs the same hit area to receive pointer events.
+        if (!(this.handle instanceof ZButton)) {
+            updateHitArea(this.handle);
+        }
         this.handle.on('pointerdown', this.onDragStartBinded);
         this.handle.on('touchstart', this.onDragStartBinded);
     }

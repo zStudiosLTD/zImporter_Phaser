@@ -145,7 +145,7 @@ export class ZScroll extends ZContainer {
         if (!this.scrollingEnabled)
             return;
         this.scrollBarHeight = this.scrollBar.getBounds().height / this.getWorldScaleY();
-        this.beed.y -= dy * 0.5; // dy > 0 = scroll down → beed moves down
+        this.beed.y += dy * 0.5; // dy > 0 = scroll down → beed moves down
         this.clampAndSync();
     }
     /** Clamp beed to [0, scrollBarHeight - beedH] and sync scrollContent. All local space. */

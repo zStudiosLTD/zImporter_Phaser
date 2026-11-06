@@ -177,7 +177,7 @@ export class ZScroll extends ZContainer {
     private onWheel(_pointer: Phaser.Input.Pointer, _over: Phaser.GameObjects.GameObject[], _dx: number, dy: number) {
         if (!this.scrollingEnabled) return;
         this.scrollBarHeight = this.scrollBar.getBounds().height / this.getWorldScaleY();
-        this.beed.y -= dy * 0.5;   // dy > 0 = scroll down → beed moves down
+        this.beed.y += dy * 0.5;   // dy > 0 = scroll down → beed moves down
         this.clampAndSync();
     }
 

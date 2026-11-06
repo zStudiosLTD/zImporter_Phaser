@@ -283,26 +283,25 @@ The package exposes several classes and methods for interacting with imported as
 
 #### `Transform Properties — Orientation-Aware vs Global`
 
-`ZContainer` maintains separate transform data for portrait and landscape orientations. Because of this, **position, scale, width, and height must be accessed through `ZContainer` methods** so the values are stored correctly and survive an orientation change:
+Every element stores a `portrait` and a `landscape` transform, and every resize re-applies the one for the current orientation. Anything not in the stored transform is undone at the next resize.
 
 ```ts
-container.setX(100);
-container.setY(200);
-container.setScaleX(1.5);
-container.setScaleY(1.5);
-container.setWidth(300);
-container.setHeight(150);
+container.setX(100);          // stored for the current orientation. Read back with getX().
+container.setY(200);          // stored for the current orientation
+container.setVisible(false);  // stored for both orientations
+container.setAlpha(0.5);      // stored for both orientations
+
+// container.x, scaleX, setScaleX() and rotation are NOT stored: a resize undoes them.
+// To store them, write the transforms and re-apply:
+container.portrait.scaleX = 1.5;
+container.landscape.scaleX = 1.5;
+container.applyTransform();
+
+// Your code owns the position (player, projectile)
+container.resizeable = false;
 ```
 
-Setting `x`, `y`, `scaleX`, etc. directly on the object will work visually but the values will be **overwritten** the next time the scene resizes or orientation changes.
-
-**Visibility, alpha, and rotation are orientation-independent** — they apply to both portrait and landscape at once, so you can set them directly or via their helper methods:
-
-```ts
-container.setVisible(false);   // hides in both orientations
-container.setAlpha(0.5);       // applies to both orientations
-container.rotation = Math.PI;  // applies to both orientations
-```
+Full guide: https://zstudiosltd.com/z-importer/guide/responsive
 
 #### `Working with Spine`
 
@@ -357,6 +356,13 @@ if (spineObj) {
 * Only one child is visible at a time.
 * Use `.setState(name: string)` to switch visible content.
 * Can contain nested `ZTimeline` objects.
+
+
+## AI skills
+
+The [`skills/`](./skills) folder has short guides that teach an AI tool to use this package correctly: setup, components, responsive layout, animation and spawning. Add the folder in zStudio under **Help → AI Skill Libraries**, or point your AI tool at `node_modules/zimporter-phaser/skills/`.
+
+Usage guide with examples: https://zstudiosltd.com/z-importer/guide
 
 ## Contributing
 
