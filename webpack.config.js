@@ -25,7 +25,6 @@ module.exports = {
     ],
   },
   externals: {
-    gsap: 'gsap',
     'reflect-metadata': 'Reflect',
     'class-transformer': 'classTransformer',
     'class-validator': 'classValidator',

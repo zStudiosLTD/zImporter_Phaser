@@ -1,5 +1,4 @@
 ﻿
-import { gsap } from "gsap";
 import { ZContainer } from "./ZContainer";
 
 type LabelState = "single" | "multi" | "none";
